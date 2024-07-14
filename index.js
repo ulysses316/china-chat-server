@@ -33,7 +33,7 @@ app.use(
 io.on("connection", (socket) => {
   socket.on("chat message", (msg) => {
     saveMessage(msg)
-    socket.emit("chat message", msg);
+    io.emit("chat message", msg);
   });
 });
 
