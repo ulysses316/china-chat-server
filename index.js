@@ -8,37 +8,22 @@ import { Socket } from "socket.io";
 // Settings
 import cors from "cors";
 import logger from "morgan";
+import { corsConfig } from "./lib/utils/config.js";
 
 const app = express();
 const port = process.env.PORT || 3001;
 
 const server = createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: ["http://localhost:3000"],
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  },
-});
+const io = new Server(server, corsConfig);
 
 app.use(logger("dev"));
-app.use(
-  cors({
-    origin: ["http://localhost:3000"],
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+app.use(cors(corsConfig));
 
 io.on("connection", (socket) => {
   socket.on("chat message", (msg) => {
     saveMessage(msg);
     io.emit(msg.roomId, msg);
   });
-});
-
-app.get("/", (req, res) => {
-  res.send("Hello World!");
 });
 
 server.listen(port, () => {
