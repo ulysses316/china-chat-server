@@ -1,7 +1,7 @@
 // Servers
 import { Server } from "socket.io";
 import { createServer, METHODS } from "node:http";
-import saveMessage from './lib/utils/saveMessage.js'
+import saveMessage from "./lib/utils/saveMessage.js";
 // Apps
 import express from "express";
 import { Socket } from "socket.io";
@@ -15,7 +15,7 @@ const port = process.env.PORT || 3001;
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000", // Origen permitido (Next.js se ejecuta en 3000)
+    origin: ["http://localhost:3000"],
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type", "Authorization"],
   },
@@ -24,7 +24,7 @@ const io = new Server(server, {
 app.use(logger("dev"));
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000"],
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -32,8 +32,8 @@ app.use(
 
 io.on("connection", (socket) => {
   socket.on("chat message", (msg) => {
-    saveMessage(msg)
-    io.emit("chat message", msg);
+    saveMessage(msg);
+    io.emit(msg.roomId, msg);
   });
 });
 
