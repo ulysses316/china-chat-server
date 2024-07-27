@@ -1,0 +1,21 @@
+version: '3'
+services:
+
+  app:
+    build: .
+    ports:
+      - "3001:3001"
+    environment:
+      - MONGODB_URI=mongodb://mongo/myapp
+      - PORT=3001
+      - SECRET
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
