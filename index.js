@@ -5,6 +5,7 @@ import saveMessage from "./lib/utils/saveMessage.js";
 // Apps
 import express from "express";
 import { Socket } from "socket.io";
+import { ExpressPeerServer } from "peer";
 // Settings
 import cors from "cors";
 import logger from "morgan";
@@ -15,18 +16,27 @@ const port = process.env.PORT || 3000;
 
 const server = createServer(app);
 const io = new Server(server, corsConfig);
+const peerServer = ExpressPeerServer(server, {
+  debug: true,
+});
 
 app.use(logger("dev"));
 app.use(cors(corsConfig));
+app.use("/peerjs", peerServer);
 
 io.on("connection", (socket) => {
-  console.log("User connected");
-  socket.on("chat message", (msg) => {
-    saveMessage(msg);
-    io.emit(msg.roomId, msg);
-  });
-});
 
+  socket.on("join-room", (roomId) => {
+    socket.join(roomId);
+  });
+
+  socket.on("chat-message", (message) => {
+    saveMessage(message);
+    io.to(message.roomId).emit("receive-message", message);
+  });
+
+  
+});
 
 app.get("/", function (req, res) {
   res.send("hello world");
