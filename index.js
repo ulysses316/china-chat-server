@@ -35,7 +35,10 @@ io.on("connection", (socket) => {
     io.to(message.roomId).emit("receive-message", message);
   });
 
-  
+  socket.on("call-user", (roomId, meetingId) => {
+    io.to(roomId).emit("receive-call", meetingId);
+  });
+
 });
 
 app.get("/", function (req, res) {
