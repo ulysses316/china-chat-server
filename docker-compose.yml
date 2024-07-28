@@ -8,7 +8,7 @@ services:
     environment:
       - MONGODB_URI=mongodb://mongo/myapp
       - PORT=3001
-      - SECRET
+      - SECRET=G9UW3BBI5QlVJjL54VOpXR1/aD/ahEQPjpSBBsK9IWc=
     depends_on:
       - mongo
 

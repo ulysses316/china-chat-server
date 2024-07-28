@@ -20,10 +20,16 @@ app.use(logger("dev"));
 app.use(cors(corsConfig));
 
 io.on("connection", (socket) => {
+  console.log("User connected");
   socket.on("chat message", (msg) => {
     saveMessage(msg);
     io.emit(msg.roomId, msg);
   });
+});
+
+
+app.get("/", function (req, res) {
+  res.send("hello world");
 });
 
 server.listen(port, () => {

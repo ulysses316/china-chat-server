@@ -7,8 +7,9 @@ WORKDIR /app
 # Copia el archivo package.json y package-lock.json
 COPY package*.json ./
 
-# Instala las dependencias
-RUN npm install
+RUN corepack enable pnpm
+
+RUN pnpm install
 
 # Copia el resto de la aplicación
 COPY . .
@@ -17,4 +18,4 @@ COPY . .
 EXPOSE 3000
 
 # Comando para iniciar la aplicación
-CMD ["npm", "start"]
+CMD ["pnpm", "start"]
